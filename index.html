@@ -388,6 +388,19 @@ body{letter-spacing:-.015em}
 @media(max-width:960px){.now{grid-template-columns:1fr;gap:36px;padding:40px 32px}}
 @media(max-width:720px){.now{padding:30px 22px;border-radius:16px;margin-top:40px}.now__list b{font-size:19px}
   .facts{grid-template-columns:1fr;border-radius:16px}.facts>div{border-left:0;border-top:1px solid var(--line);padding:18px 22px;grid-template-columns:1fr auto;align-items:baseline}.facts>div:first-child{border-top:0}.facts dd{font-size:21px}}
+
+/* v21: 6페이지 밤바다 불빛 */
+#cases{padding-top:0}
+.nite{position:relative;width:100%;aspect-ratio:1200/600;max-height:680px;min-height:440px;background:#08090B;overflow:hidden;margin-bottom:64px}
+.nite canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.nite__label{position:absolute;left:72%;top:52%;transform:translate(-50%,-100%);pointer-events:none;margin:0;padding:7px 16px;border-radius:999px;border:1px solid rgba(255,255,255,.28);background:rgba(14,14,14,.35);color:rgba(255,255,255,.92);font-size:clamp(13px,1.2vw,16px);font-weight:600;white-space:nowrap;letter-spacing:-.01em;backdrop-filter:blur(2px)}
+.nite__label::after{content:"";position:absolute;left:50%;top:100%;width:1px;height:18px;background:linear-gradient(rgba(255,255,255,.4),rgba(255,255,255,0))}
+.nite__head{position:absolute;left:0;right:0;bottom:7%;width:100%;max-width:var(--maxw);margin-inline:auto;padding-inline:20px;display:grid;gap:12px;pointer-events:none}
+.nite__head .d2{color:var(--white);text-shadow:0 2px 24px rgba(0,0,0,.6)}
+.nite__head .lead{color:rgba(255,255,255,.7);text-shadow:0 1px 12px rgba(0,0,0,.6)}
+.nite__tip{position:absolute;pointer-events:none;transform:translate(-50%,-140%);padding:6px 14px;border-radius:999px;background:rgba(255,255,255,.95);color:var(--ink);font-size:14px;font-weight:600;white-space:nowrap;opacity:0;transition:opacity .15s}
+.nite__tip.on{opacity:1}
+@media(max-width:720px){.nite{aspect-ratio:1200/1250;margin-bottom:48px}.nite__head{bottom:5%;gap:8px}.nite__head .lead{font-size:15px}}
 </style>
 </head>
 <body>
@@ -521,11 +534,13 @@ body{letter-spacing:-.015em}
 </section>
 
 <section class="band" id="cases">
+  <div class="nite" id="nite">
+    <canvas aria-label="여수 밤바다에 함께하는 업체 불빛이 켜진 그림. 불빛을 누르면 업체 소개가 열립니다." role="img"></canvas>
+    <p class="nite__label" id="niteLabel">여수에서 빛나고 있는 곳들</p>
+    <div class="nite__head"><h2 class="d2">저희부터, 사장님의 업체까지.</h2><p class="lead">직접 운영하는 곳에서 먼저 사용해 보고, 같은 방법으로 사장님 업체를 알립니다. 업체를 누르면 자세한 내용을 볼 수 있습니다.</p></div>
+    <div class="nite__tip" aria-hidden="true"></div>
+  </div>
   <div class="wrap">
-    <div class="head">
-      <h2 class="d2">저희부터, 사장님의 업체까지.</h2>
-      <p class="lead">직접 운영하는 곳에서 먼저 사용해 보고, 같은 방법으로 사장님 업체를 알립니다. 업체를 누르면 자세한 내용을 볼 수 있습니다.</p>
-    </div>
     <div class="biz" id="bizGrid"></div>
   </div>
 </section>
@@ -768,6 +783,108 @@ body{letter-spacing:-.015em}
     mw.addEventListener('click',function(e){if(e.target===mw)closeMw();});
     document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMw();});
   }
+
+  /* ===== 6페이지 밤바다 불빛: 업체 목록(BIZ)과 같은 자료를 씀 ===== */
+  (function(){
+    var stage=document.getElementById('nite');if(!stage)return;
+    var cv=stage.querySelector('canvas'),ctx=cv.getContext('2d'),ntip=stage.querySelector('.nite__tip');
+    function rnd(i){var x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);}
+    var VW=1200,VH=620,HZ=445,VHc=VH,sc=1,offY=0,X0=0,XW=1200;
+    function far1(x){return HZ-(120+34*Math.sin(x/170+1.2)+18*Math.sin(x/63+.4));}
+    function far2(x){return HZ-(78+26*Math.sin(x/120+2.3)+11*Math.sin(x/41+1));}
+    var LX=520;
+    function land(x){if(x<LX)return HZ;var t=Math.min(1,(x-LX)/240);t=t*t*(3-2*t);return HZ-t*(150+28*Math.sin(x/95)+14*Math.sin(x/33+1.7));}
+    function head(x){if(x>170)return HZ;var t=1-x/170;t=t*t*(3-2*t);return HZ-t*(64+8*Math.sin(x/20));}
+    var SLOTS=(function(){
+      var out=[];
+      for(var r=0;r<16;r++){
+        var y=HZ-7-r*12.5,step=23,off=(r%2)*step/2;
+        for(var x=LX+10+off;x<=VW-12;x+=step){var jx=x+(rnd(x+r*17)-.5)*9,jy=y+(rnd(x*2+r)-.5)*4;if(jy>land(jx)+9)out.push({x:jx,y:jy,r:r});}
+        for(var hx=14+off;hx<160;hx+=step){var hy=y+(rnd(hx+r)-.5)*4;if(hy>head(hx)+9)out.push({x:hx,y:hy,r:r});}
+      }
+      out.forEach(function(p){var dx=p.x-860,dy=(HZ-p.y)*2.2;p.d=Math.sqrt(dx*dx+dy*dy)+rnd(p.x+p.y)*18;});
+      out.sort(function(a,b){return a.d-b.d;});
+      return out;
+    })();
+    var STARS=[];for(var s=0;s<220;s++)STARS.push({x:rnd(s+3)*VW,y:rnd(s+77)*(HZ-130)-260,r:.35+rnd(s+11)*.9,a:.12+rnd(s+29)*.45,p:rnd(s+51)*6.28});
+    var SPR={};
+    function sprite(col){
+      if(SPR[col])return SPR[col];
+      var c=document.createElement('canvas');c.width=c.height=128;var g=c.getContext('2d');
+      var gr=g.createRadialGradient(64,64,0,64,64,64);gr.addColorStop(0,col);gr.addColorStop(.18,col.replace('1)','.55)'));gr.addColorStop(.45,col.replace('1)','.16)'));gr.addColorStop(1,col.replace('1)','0)'));
+      g.fillStyle=gr;g.fillRect(0,0,128,128);SPR[col]=c;return c;
+    }
+    var WARM=['rgba(255,215,168,1)','rgba(255,196,138,1)','rgba(255,230,199,1)','rgba(255,204,160,1)'];
+    function colorOf(b,i){return b.cat==='food'?'rgba(255,128,108,1)':(b.cat==='cafe'?'rgba(255,170,140,1)':WARM[Math.floor(rnd(i+7)*WARM.length)]);}
+    var born=[],hover=-1,t0=performance.now(),started=false,visible=false,running=false;
+    function count(){return Math.min(BIZ.length,SLOTS.length);}
+    function stamp(stagger){var now=performance.now();for(var i=0;i<count();i++)born[i]=now+i*stagger;}
+    function size(){var r=stage.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1);cv.width=Math.max(1,Math.round(r.width*dpr));cv.height=Math.max(1,Math.round(r.height*dpr));if(r.width<720){X0=380;XW=800;}else{X0=0;XW=VW;}sc=cv.width/XW;VHc=cv.height/sc;offY=VHc*.55-HZ;placeLabel();}
+    function P(y){return y+offY;}
+    var label=document.getElementById('niteLabel');
+    function placeLabel(){
+      if(!label)return;var r=stage.getBoundingClientRect(),c=count();if(!c)return;
+      var minY=1e9,sx=0;for(var i=0;i<c;i++){minY=Math.min(minY,SLOTS[i].y);sx+=SLOTS[i].x;}
+      label.style.left=((sx/c-X0)/XW*r.width)+'px';
+      label.style.top=((minY-30+offY)/VHc*r.height)+'px';
+    }
+    function shape(fn,from,to,fill){ctx.beginPath();ctx.moveTo(from,P(HZ));for(var x=from;x<=to;x+=6)ctx.lineTo(x,P(fn(x)));ctx.lineTo(to,P(HZ));ctx.closePath();ctx.fillStyle=fill;ctx.fill();}
+    function reflect(x,col,e,t,i,len){for(var y=4;y<len;y+=3){var f=1-y/len,w=(1.2+y*.05)*(.6+.4*Math.sin(t*2+y*.35+i));ctx.globalAlpha=.32*e*f*f;ctx.fillStyle=col;ctx.fillRect(x+Math.sin(t*1.6+y*.22+i)*(1+y*.04)-w,P(HZ)+y,w*2,1.4);}}
+    var BL=140,BR=540,DECK=HZ-34,T1=235,T2=445,TOP=HZ-150;
+    function bridge(t){
+      ctx.globalCompositeOperation='source-over';ctx.strokeStyle='rgba(150,140,150,.32)';ctx.lineWidth=.6;
+      [T1,T2].forEach(function(tx){for(var k=1;k<=6;k++){var d=k*16;ctx.beginPath();ctx.moveTo(tx,P(TOP+6+k*4));ctx.lineTo(tx-d,P(DECK));ctx.moveTo(tx,P(TOP+6+k*4));ctx.lineTo(tx+d,P(DECK));ctx.stroke();}});
+      ctx.fillStyle='#1F1D23';[T1,T2].forEach(function(tx){ctx.beginPath();ctx.moveTo(tx-7,P(HZ));ctx.lineTo(tx-2,P(TOP));ctx.lineTo(tx+2,P(TOP));ctx.lineTo(tx+7,P(HZ));ctx.closePath();ctx.fill();});
+      ctx.fillRect(BL,P(DECK),BR-BL,4);
+      ctx.globalCompositeOperation='lighter';var lamp=sprite('rgba(255,222,190,1)');
+      for(var x=BL+6;x<BR;x+=18){ctx.globalAlpha=.55;ctx.drawImage(lamp,x-9,P(DECK)-9,18,18);ctx.globalAlpha=.9;ctx.fillStyle='rgba(255,230,205,1)';ctx.fillRect(x-.8,P(DECK)-.8,1.6,1.6);}
+      for(var x2=BL+6;x2<BR;x2+=36)reflect(x2,'rgba(255,222,190,1)',.45,t,x2,26);
+      var blink=.5+.5*Math.sin(t*2.2);[T1,T2].forEach(function(tx){ctx.globalAlpha=.4+.6*blink;ctx.drawImage(sprite('rgba(255,90,79,1)'),tx-11,P(TOP)-11,22,22);});
+      ctx.globalAlpha=1;
+    }
+    function frame(now){
+      if(!visible){running=false;return;}
+      var t=(now-t0)/1000;ctx.setTransform(sc,0,0,sc,-X0*sc,0);ctx.globalCompositeOperation='source-over';ctx.globalAlpha=1;
+      var sky=ctx.createLinearGradient(0,0,0,P(HZ));sky.addColorStop(0,'#050608');sky.addColorStop(.62,'#0B0B0F');sky.addColorStop(.9,'#1A1012');sky.addColorStop(1,'#2A1512');
+      ctx.fillStyle=sky;ctx.fillRect(0,0,VW,P(HZ)+1);
+      var glow=ctx.createRadialGradient(780,P(HZ),0,780,P(HZ),620);glow.addColorStop(0,'rgba(255,110,90,.20)');glow.addColorStop(1,'rgba(255,110,90,0)');ctx.fillStyle=glow;ctx.fillRect(0,0,VW,P(HZ));
+      STARS.forEach(function(s){ctx.globalAlpha=s.a*(.7+.3*Math.sin(t*.8+s.p));ctx.fillStyle='#FFFFFF';ctx.beginPath();ctx.arc(s.x,P(s.y),s.r,0,6.283);ctx.fill();});
+      ctx.globalAlpha=1;shape(far1,0,VW,'rgba(34,32,40,.85)');shape(far2,0,VW,'#15141A');
+      var mist=ctx.createLinearGradient(0,P(HZ-60),0,P(HZ+10));mist.addColorStop(0,'rgba(255,190,170,0)');mist.addColorStop(.8,'rgba(255,190,170,.07)');mist.addColorStop(1,'rgba(255,190,170,0)');ctx.fillStyle=mist;ctx.fillRect(0,P(HZ-60),VW,70);
+      shape(land,LX,VW,'#0A0A0D');shape(head,0,170,'#0A0A0D');
+      var BOT=VHc-offY;var sea=ctx.createLinearGradient(0,P(HZ),0,VHc);sea.addColorStop(0,'#120F12');sea.addColorStop(.25,'#0A0A0D');sea.addColorStop(1,'#050506');ctx.fillStyle=sea;ctx.fillRect(X0,P(HZ),XW,VHc-P(HZ)+1);
+      ctx.fillStyle='rgba(255,170,150,.08)';ctx.fillRect(0,P(HZ),VW,1);
+      for(var w=0;w<70;w++){var wy=HZ+8+rnd(w+900)*(BOT-HZ-14),ww=20+rnd(w+950)*90,wx=(rnd(w+990)*VW+t*(6+rnd(w)*8))%(VW+ww)-ww,fd=1-(wy-HZ)/(BOT-HZ);ctx.globalAlpha=(.05+.07*fd)*(.6+.4*Math.sin(t*.9+w));ctx.fillStyle='#FFE2CC';ctx.fillRect(wx,P(wy),ww,1);}
+      ctx.globalAlpha=1;ctx.globalCompositeOperation='lighter';bridge(t);
+      for(var i=0;i<count();i++){
+        var sl=SLOTS[i],k=(started&&born[i])?Math.max(0,Math.min(1,(now-born[i])/700)):0;if(k<=0)continue;
+        var e=1-Math.pow(1-k,3),col=colorOf(BIZ[i],i),flick=.9+.1*Math.sin(t*1.7+i*1.3),hv=i===hover?1.9:1,R=32*e*hv*flick;
+        ctx.globalAlpha=.75*e;ctx.drawImage(sprite(col),sl.x-R,P(sl.y)-R,R*2,R*2);
+        ctx.globalAlpha=e;ctx.fillStyle=col;ctx.fillRect(sl.x-2.1,P(sl.y)-2.8,4.2,5.6);
+        if(sl.r<=1)reflect(sl.x,col,e,t,i,60+rnd(i+300)*70);
+      }
+      ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';
+      requestAnimationFrame(frame);
+    }
+    function run(){if(running||!visible)return;running=true;requestAnimationFrame(frame);}
+    function pick(ev){
+      var r=cv.getBoundingClientRect(),x=X0+(ev.clientX-r.left)/r.width*XW,y=(ev.clientY-r.top)/r.height*VHc-offY,best=-1,bd=20*20;
+      for(var i=0;i<count();i++){var dx=SLOTS[i].x-x,dy=SLOTS[i].y-y,d=dx*dx+dy*dy;if(d<bd){bd=d;best=i;}}
+      hover=best;cv.style.cursor=best>=0?'pointer':'default';
+      if(best>=0){ntip.textContent=BIZ[best].name;ntip.style.left=((SLOTS[best].x-X0)/XW*r.width)+'px';ntip.style.top=((SLOTS[best].y+offY)/VHc*r.height)+'px';ntip.classList.add('on');}
+      else ntip.classList.remove('on');
+      return best;
+    }
+    cv.addEventListener('mousemove',pick);
+    cv.addEventListener('mouseleave',function(){hover=-1;ntip.classList.remove('on');});
+    cv.addEventListener('click',function(ev){var i=pick(ev);if(i>=0){ntip.classList.remove('on');openMw(BIZ[i],cv);}});
+    function start(){if(started)return;started=true;stamp(140);}
+    if('IntersectionObserver' in window){
+      new IntersectionObserver(function(es){es.forEach(function(e){visible=e.isIntersecting;if(visible){if(e.intersectionRatio>.3)start();run();}});},{threshold:[0,.3,.6]}).observe(stage);
+    }else{visible=true;start();run();}
+    setTimeout(function(){if(visible)start();},2500);
+    window.addEventListener('resize',size);size();
+  })();
 
   var form=document.getElementById('consultForm'),msg=document.getElementById('formMsg');
   form.addEventListener('submit',function(e){
