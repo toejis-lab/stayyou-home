@@ -374,6 +374,15 @@ body{letter-spacing:-.015em}
 .dt__work>div{padding:18px;border:1px solid var(--line);border-radius:10px;display:grid;gap:6px;min-width:0;font-size:15.5px;color:var(--ink-2)}
 .dt__work b{font-size:16.5px;color:var(--ink)}
 .dt__pics{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.dt__vids{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:start}
+.vid{position:relative;width:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#000;border:1px solid var(--line)}
+.vid--tall{aspect-ratio:9/16}
+.vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vlink{display:grid;align-content:center;justify-items:start;gap:8px;aspect-ratio:16/9;padding:18px 20px;border-radius:10px;background:var(--sea);color:var(--white);text-decoration:none;transition:transform .2s}
+.vlink:hover{transform:translateY(-3px)}
+.vlink small{font-size:13.5px;color:rgba(255,255,255,.7)}
+.vlink b{font-size:17px}
+.vlink span{font-size:14.5px;color:var(--camellia);font-weight:700}
 .dt__pics .ph{aspect-ratio:4/3;border:1px solid var(--line)}
 .dt__link{justify-self:start}
 .dt__link[aria-disabled="true"]{border-color:var(--line);color:var(--ink-2);cursor:default}
@@ -382,7 +391,7 @@ body{letter-spacing:-.015em}
 @media(max-width:720px){.biz{grid-template-columns:1fr;gap:26px}
   .mw{padding:calc(10px + env(safe-area-inset-top,0px)) 10px calc(10px + env(safe-area-inset-bottom,0px))}
   .mw__box{border-radius:14px}.mw__bar{padding:10px 12px;gap:8px}.mw__title{display:none}.mw__menu{margin-inline:0 auto;gap:2px}.mw__tab{padding:0 14px}
-  .mw__body{padding:22px 18px 28px}.dt__top{grid-template-columns:1fr;gap:20px}.dt__work,.dt__pics{grid-template-columns:1fr}.dt__pics .ph{aspect-ratio:16/9}
+  .mw__body{padding:22px 18px 28px}.dt__top{grid-template-columns:1fr;gap:20px}.dt__work,.dt__pics,.dt__vids{grid-template-columns:1fr}.vid--tall{width:68%;justify-self:center}.dt__pics .ph{aspect-ratio:16/9}
   .mw__list{grid-template-columns:1fr 1fr;gap:20px 14px}.mw__list .bz__name{font-size:16.5px}.mw__list .bz__go{display:none}}
 
 /* v16: 휴대폰에서는 업체 사진 외의 사진 자리를 숨김 */
@@ -672,7 +681,7 @@ body{letter-spacing:-.015em}
         <p>전남광주통합특별시 여수시 돌산읍 강남3길 32 | 대표번호 061-681-4959 | jis2118@hanmail.net</p>
         <p>© <span id="year">2026</span> Stay You Total Solution</p>
       </div>
-      <div class="ftr__links"><a href="#top">이용약관</a><a href="#privacy" data-pv><b>개인정보처리방침</b></a></div>
+      <div class="ftr__links"><a href="#guide" data-gd>홈페이지 이용 안내</a><a href="#privacy" data-pv><b>개인정보처리방침</b></a></div>
     </div>
   </div>
 </footer>
@@ -720,6 +729,26 @@ body{letter-spacing:-.015em}
       <p>개인정보 침해에 대한 신고나 상담이 필요하시면 아래 기관에 문의하실 수 있습니다.</p>
       <ul><li>개인정보침해신고센터: (국번 없이) 118 (privacy.kisa.or.kr)</li><li>개인정보분쟁조정위원회: 1833-6972 (www.kopico.go.kr)</li><li>대검찰청: (국번 없이) 1301</li><li>경찰청: (국번 없이) 182</li></ul>
       <p class="pv__date">이 개인정보처리방침은 2026년 10월 9일부터 적용됩니다.</p>
+    </div>
+  </div>
+</div>
+
+<div class="mw pv" id="gd" hidden>
+  <div class="mw__box" role="dialog" aria-modal="true" aria-labelledby="gdTitle">
+    <div class="mw__bar"><strong class="pv__title" id="gdTitle">홈페이지 이용 안내</strong><button class="mw__x" id="gdClose" type="button" aria-label="창 닫기">닫기</button></div>
+    <div class="mw__body pv__doc">
+      <p data-k="guide-1">주식회사 스테이유 토탈 솔루션 홈페이지를 이용해 주셔서 감사합니다. 홈페이지 이용과 관련해 아래 내용을 안내드립니다.</p>
+      <h3 data-k="guide-2">1. 저작권</h3>
+      <p data-k="guide-3">이 홈페이지에 실린 글, 사진, 영상, 디자인 등 모든 콘텐츠의 저작권은 주식회사 스테이유 토탈 솔루션과 각 콘텐츠의 권리자에게 있습니다. 허락 없이 복제하거나 다른 홈페이지, 광고물, 영업 자료 등에 사용할 수 없습니다.</p>
+      <h3 data-k="guide-4">2. 광고 사례의 사진과 영상</h3>
+      <p data-k="guide-5">광고 사례에 소개된 업체의 사진과 영상은 각 업체의 허락을 받아 싣고 있습니다. 게재 중단을 원하시는 업체는 아래 연락처로 알려 주시면 지체 없이 조치하겠습니다.</p>
+      <h3 data-k="guide-6">3. 업체 정보</h3>
+      <p data-k="guide-7">사례에 소개된 업체의 상호, 시설, 요금 등은 바뀔 수 있습니다. 정확한 정보는 각 업체나 네이버 플레이스에서 확인해 주세요.</p>
+      <h3 data-k="guide-8">4. 외부 링크</h3>
+      <p data-k="guide-9">네이버 플레이스, 유튜브, 인스타그램 등 외부 사이트로 연결되는 링크는 해당 사이트의 정책에 따릅니다.</p>
+      <h3 data-k="guide-10">5. 문의</h3>
+      <p data-k="guide-11">전화 061-681-4959 · 이메일 jis2118@hanmail.net</p>
+      <p class="pv__date" data-k="guide-12">이 안내는 2026년 10월 10일부터 적용됩니다.</p>
     </div>
   </div>
 </div>
@@ -845,6 +874,16 @@ var CMS_CONFIG={apiKey:'AIzaSyBR5SD9qxD5Ga9HcsdGmbITMhJ_rYex3go',authDomain:'sta
     f.appendChild(el('p','mw__sub','함께하는 '+CATS[cat]+' 업체 '+items.length+'곳입니다. 업체를 누르면 자세한 내용이 열립니다.'));
     var g=el('div','mw__list');items.forEach(function(b){g.appendChild(card(b,function(x){show(x.cat,x);}));});f.appendChild(g);return f;
   }
+  function ytId(u){var m=u.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);return m?m[1]:null;}
+  function videoBox(u,title){
+    var id=ytId(u);
+    if(id){var w=el('div','vid'+(/\/shorts\//.test(u)?' vid--tall':''));var f=document.createElement('iframe');
+      f.src='https://www.youtube-nocookie.com/embed/'+id;f.title=title;f.loading='lazy';f.allow='accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen';f.allowFullscreen=true;f.referrerPolicy='strict-origin-when-cross-origin';w.appendChild(f);return w;}
+    var host='';try{host=new URL(u).hostname;}catch(e){}
+    var src=/instagram/.test(host)?'인스타그램':/tiktok/.test(host)?'틱톡':/naver/.test(host)?'네이버':/youtu/.test(host)?'유튜브':'외부 영상';
+    var a=el('a','vlink');a.href=u;a.target='_blank';a.rel='noopener';
+    a.appendChild(el('small',null,src));a.appendChild(el('b',null,title));a.appendChild(el('span',null,'영상 보기 ↗'));return a;
+  }
   function detailView(b){
     var f=document.createDocumentFragment();
     var back=el('button','mw__back','‹ '+CATS[b.cat]+' 목록');back.type='button';back.addEventListener('click',function(){show(b.cat,null);});f.appendChild(back);
@@ -859,6 +898,12 @@ var CMS_CONFIG={apiKey:'AIzaSyBR5SD9qxD5Ga9HcsdGmbITMhJ_rYex3go',authDomain:'sta
     var w=el('div','dt__work');
     var wk=b.work||[];[['클립 영상',wk[0]||'제작한 영상 내용이 들어갈 자리'],['검색 최적화',wk[1]||'플레이스 정비 내용이 들어갈 자리'],['실제 방문 리뷰',wk[2]||'리뷰 운영 내용이 들어갈 자리']].forEach(function(x){var c=el('div');c.appendChild(el('b',null,x[0]));c.appendChild(el('span',null,x[1]));w.appendChild(c);});
     s1.appendChild(w);d.appendChild(s1);
+    var vids=(b.videos||[]).filter(function(u){return /^https:\/\//.test(u||'');});
+    if(vids.length){
+      var sv=el('div','dt__sec');sv.appendChild(el('h4',null,'영상'));var vg=el('div','dt__vids');
+      vids.forEach(function(u,i){vg.appendChild(videoBox(u,b.name+' 영상 '+(i+1)));});
+      sv.appendChild(vg);d.appendChild(sv);
+    }
     var s2=el('div','dt__sec');s2.appendChild(el('h4',null,'사진'));
     var p=el('div','dt__pics');for(var i=1;i<=3;i++){var ex=EXTRA[b.id+'_'+i];if(ex){var dx=el('div','ph ph--img'),ix=el('img');ix.src=ex;ix.alt=b.name+' 사진 '+i;ix.loading='lazy';dx.appendChild(ix);p.appendChild(dx);}else p.appendChild(ph('사진 자리 '+i,''));}s2.appendChild(p);d.appendChild(s2);if(cmsOn()&&!EXTRA_TRIED[b.id])loadExtras(b);
     f.appendChild(d);return f;
@@ -922,7 +967,7 @@ var CMS_CONFIG={apiKey:'AIzaSyBR5SD9qxD5Ga9HcsdGmbITMhJ_rYex3go',authDomain:'sta
     if(c.texts){[].forEach.call(document.querySelectorAll('[data-k]'),function(n){var t=c.texts[n.getAttribute('data-k')];if(typeof t==='string'&&t.trim())setRich(n,t);});}
     if(Array.isArray(c.cats)){var cl=c.cats.filter(function(x){return x&&x.id&&x.name;}).map(function(x){return {id:String(x.id),name:String(x.name)};});if(cl.length){CATLIST=cl;syncCats();BIZ.forEach(function(b){b.cat=fixCat(b);});renderTabs();}}
     if(Array.isArray(c.biz)&&c.biz.length){
-      var list=c.biz.filter(function(b){return b&&b.id&&b.name;}).map(function(b){return {id:String(b.id),name:String(b.name),cat:String(b.cat||''),kind:String(b.kind||''),url:/^https?:\/\//.test(b.url||'')?b.url:'',intro:b.intro||'',work:Array.isArray(b.work)?b.work:[]};});
+      var list=c.biz.filter(function(b){return b&&b.id&&b.name;}).map(function(b){return {id:String(b.id),name:String(b.name),cat:String(b.cat||''),kind:String(b.kind||''),url:/^https?:\/\//.test(b.url||'')?b.url:'',intro:b.intro||'',work:Array.isArray(b.work)?b.work:[],videos:Array.isArray(b.videos)?b.videos.map(String):[]};});
       list.forEach(function(b){b.cat=fixCat(b);});
       if(list.length){BIZ.length=0;list.forEach(function(b){BIZ.push(b);});renderBiz();}
     }
@@ -1050,15 +1095,19 @@ var CMS_CONFIG={apiKey:'AIzaSyBR5SD9qxD5Ga9HcsdGmbITMhJ_rYex3go',authDomain:'sta
     window.addEventListener('resize',size);size();
   })();
 
-  /* ===== 개인정보처리방침 창 ===== */
-  var pv=document.getElementById('pv'),pvRet=null,pvT=null;
-  function openPv(e){if(e)e.preventDefault();clearTimeout(pvT);pvRet=document.activeElement;pv.hidden=false;document.body.style.overflow='hidden';void pv.offsetWidth;pv.classList.add('is-open');document.getElementById('pvClose').focus();}
-  function closePv(){if(pv.hidden)return;pv.classList.remove('is-open');if(mw.hidden)document.body.style.overflow='';pvT=setTimeout(function(){pv.hidden=true;if(pvRet&&pvRet.focus)pvRet.focus();},320);}
-  [].forEach.call(document.querySelectorAll('[data-pv]'),function(a){a.addEventListener('click',openPv);});
-  document.getElementById('pvClose').addEventListener('click',closePv);
-  pv.addEventListener('click',function(e){if(e.target===pv)closePv();});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape')closePv();});
-  if(location.hash==='#privacy')openPv();
+  /* ===== 개인정보처리방침·이용 안내 창 ===== */
+  function dialog(id,closeId,attr,hash){
+    var dv=document.getElementById(id),ret=null,tm=null;
+    function open(e){if(e)e.preventDefault();clearTimeout(tm);ret=document.activeElement;dv.hidden=false;document.body.style.overflow='hidden';void dv.offsetWidth;dv.classList.add('is-open');document.getElementById(closeId).focus();}
+    function close(){if(dv.hidden)return;dv.classList.remove('is-open');if(mw.hidden)document.body.style.overflow='';tm=setTimeout(function(){dv.hidden=true;if(ret&&ret.focus)ret.focus();},320);}
+    [].forEach.call(document.querySelectorAll('['+attr+']'),function(a){a.addEventListener('click',open);});
+    document.getElementById(closeId).addEventListener('click',close);
+    dv.addEventListener('click',function(e){if(e.target===dv)close();});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+    if(location.hash===hash)open();
+  }
+  dialog('pv','pvClose','data-pv','#privacy');
+  dialog('gd','gdClose','data-gd','#guide');
 
   /* ===== 상담 신청 접수 (Firebase에 저장) ===== */
   var form=document.getElementById('consultForm'),msg=document.getElementById('formMsg'),sending=false;
