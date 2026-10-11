@@ -110,6 +110,20 @@ button,input,select,textarea{font:inherit;color:inherit}
 .letter__greet{color:var(--ink);font-weight:700;font-size:1.1em}
 .letter__quote{font-size:clamp(20px,2vw,25px);line-height:1.7;font-weight:700;color:var(--camellia);padding:6px 0 6px 22px;border-left:3px solid var(--camellia)}
 .letter__sign{color:var(--ink);font-weight:800;font-size:1.15em;padding-top:26px;border-top:1px solid var(--line)}
+.m-more{display:none}
+@media(max-width:720px){
+  #bizGrid .bz:nth-child(n+5){display:none}
+  .m-more{display:flex;justify-content:center;margin-top:30px}
+  .m-more .btn{width:100%;max-width:360px}
+  .letter:not(.is-open) .letter__body>.letter__p:nth-child(n+4){display:none}
+  .letter:not(.is-open) .letter__body>.letter__p:nth-child(3){-webkit-mask-image:linear-gradient(#000 45%,transparent);mask-image:linear-gradient(#000 45%,transparent)}
+  .letter .m-more{margin-top:4px}
+  .band .says{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin-inline:-20px;padding:2px 20px 14px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .band .says::-webkit-scrollbar{display:none}
+  .band .says>.say1{flex:0 0 82%;scroll-snap-align:center}
+  .says__hint{display:block;margin-top:6px;font-size:13.5px;color:var(--ink-2);text-align:center}
+}
+.says__hint{display:none}
 @media(max-width:900px){.letter{grid-template-columns:1fr;gap:28px}.letter__side{position:static}.letter__body{gap:24px}}
 .say{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
 .say>*{min-width:0}
@@ -474,6 +488,7 @@ body{letter-spacing:-.015em}
   </div>
   <div class="wrap">
     <div class="biz" id="bizGrid"></div>
+    <div class="m-more"><button class="btn btn--line" type="button" id="bizMore">업체 전체 보기</button></div>
   </div>
 </section>
 
@@ -507,6 +522,7 @@ body{letter-spacing:-.015em}
       <article class="say1"><p class="say1__kind" data-k="says-9">카페</p><h3 class="say1__q" data-k="says-10">“우리 커피는 직접 로스팅해요.”</h3><p data-k="says-11">원두, 로스팅, 추출 과정을 보여주면 “맛있는 카페”라는 말보다 강합니다.</p></article>
       <article class="say1"><p class="say1__kind" data-k="says-12">동네 가게</p><h3 class="say1__q" data-k="says-13">“우리 가게는 분위기가 달라요.”</h3><p data-k="says-14">공간, 사람, 서비스를 손님이 방문하기 전에 미리 경험하게 합니다.</p></article>
     </div>
+    <p class="says__hint">← 옆으로 밀어서 보기 →</p>
   </div>
 </section>
 
@@ -526,6 +542,7 @@ body{letter-spacing:-.015em}
         <p class="letter__p" data-k="about-L9">사장님이 정성껏 준비한 공간에 손님이 들어서는 순간,<br>그 손님이 좋은 기억을 안고 다시 찾아오는 순간.<br>저희가 하는 일이 그 순간에 보탬이 되기를 바랍니다.</p>
         <p class="letter__p" data-k="about-L10">사장님이 쌓아온 정성이<br>더 많은 사람에게 사랑받을 수 있도록.</p>
         <p class="letter__p letter__sign" data-k="about-L11">그 곁에<br>스테이 유 토탈 솔루션이 함께하겠습니다.</p>
+        <div class="m-more"><button class="btn btn--line" type="button" id="letterMore" aria-expanded="false">인사말 전체 읽기</button></div>
       </div>
     </div>
     <div class="now">
@@ -950,10 +967,24 @@ var CMS_CONFIG={apiKey:'AIzaSyBR5SD9qxD5Ga9HcsdGmbITMhJ_rYex3go',authDomain:'sta
   function renderBiz(){
     if(grid){grid.textContent='';BIZ.forEach(function(b){grid.appendChild(card(b,openMw));});}
     if(bizCount)bizCount.textContent=BIZ.length+'곳';
+    if(typeof updMore==='function')updMore();
     if(mwMenu)renderTabs();
     if(window.__niteRefresh)window.__niteRefresh();
   }
   if(bizCount)bizCount.textContent=BIZ.length+'곳';
+  /* ===== 휴대폰: 업체 전체 보기 · 인사말 펼치기 ===== */
+  var bizMore=document.getElementById('bizMore');
+  function updMore(){if(!bizMore)return;bizMore.textContent='업체 전체 보기 ('+BIZ.length+'곳)';bizMore.parentNode.hidden=BIZ.length<=4;}
+  if(bizMore){updMore();bizMore.addEventListener('click',function(){
+    var first=CATLIST.filter(function(c){return BIZ.some(function(b){return b.cat===c.id;});})[0];if(!first)return;
+    clearTimeout(mwTimer);mwReturn=bizMore;paint(first.id,null);mw.hidden=false;document.body.style.overflow='hidden';void mw.offsetWidth;markTab(first.id);mw.classList.add('is-open');document.getElementById('mwClose').focus();
+  });}
+  var letterMore=document.getElementById('letterMore');
+  if(letterMore)letterMore.addEventListener('click',function(){
+    var L=letterMore.closest('.letter'),open=L.classList.toggle('is-open');
+    letterMore.textContent=open?'인사말 접기':'인사말 전체 읽기';letterMore.setAttribute('aria-expanded',open?'true':'false');
+    if(!open)L.scrollIntoView({block:'start'});
+  });
 
   /* ===== 관리자 페이지에서 저장한 내용 불러오기 ===== */
   function cmsOn(){return !!(CMS_CONFIG.apiKey&&CMS_CONFIG.projectId);}
