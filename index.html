@@ -481,8 +481,8 @@ body{letter-spacing:-.015em}
 <main id="top">
 <section class="band" id="cases">
   <div class="nite" id="nite">
-    <canvas aria-label="여수 밤바다에 함께하는 업체 불빛이 켜진 그림. 불빛을 누르면 업체 소개가 열립니다." role="img"></canvas>
-    <p class="nite__label" id="niteLabel" data-k="cases-1">여수에서 빛나고 있는 곳들</p>
+    <canvas aria-label="여수 밤바다에 불빛이 켜진 그림" role="img"></canvas>
+    <p class="nite__label" id="niteLabel" data-k="cases-1">여수에서 빛나는 곳들</p>
     <div class="nite__head"><h2 class="d2" data-k="cases-2">저희부터, 사장님의 업체까지.</h2><p class="lead" data-k="cases-3">직접 운영하는 곳에서 먼저 사용해 보고, 같은 방법으로 사장님 업체를 알립니다. 업체를 누르면 자세한 내용을 볼 수 있습니다.</p></div>
     <div class="nite__tip" aria-hidden="true"></div>
   </div>
@@ -559,7 +559,7 @@ body{letter-spacing:-.015em}
       </ul>
     </div>
     <dl class="facts">
-      <div><dt data-k="about-13">함께한 업체</dt><dd id="bizCount">13곳</dd></div>
+      <div><dt data-k="about-13">스테이 유와 함께한 업체</dt><dd data-k="about-13n">50곳</dd></div>
       <div><dt data-k="about-16">일하는 곳</dt><dd data-k="about-17">여수 돌산</dd></div>
     </dl>
   </div>
@@ -1070,9 +1070,10 @@ var CMS_CONFIG={apiKey:'AIzaSyBR5SD9qxD5Ga9HcsdGmbITMhJ_rYex3go',authDomain:'sta
       g.fillStyle=gr;g.fillRect(0,0,128,128);SPR[col]=c;return c;
     }
     var WARM=['rgba(255,215,168,1)','rgba(255,196,138,1)','rgba(255,230,199,1)','rgba(255,204,160,1)'];
-    function colorOf(b,i){return b.cat==='food'?'rgba(255,128,108,1)':(b.cat==='cafe'?'rgba(255,170,140,1)':WARM[Math.floor(rnd(i+7)*WARM.length)]);}
+    var NLIGHT=50;
+    function colorOf(i){return i%9===4?'rgba(255,128,108,1)':(i%11===7?'rgba(255,170,140,1)':WARM[Math.floor(rnd(i+7)*WARM.length)]);}
     var born=[],hover=-1,t0=performance.now(),started=false,visible=false,running=false;
-    function count(){return Math.min(BIZ.length,SLOTS.length);}
+    function count(){return Math.min(NLIGHT,SLOTS.length);}
     function stamp(stagger){var now=performance.now();for(var i=0;i<count();i++)born[i]=now+i*stagger;}
     function size(){var r=stage.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1);cv.width=Math.max(1,Math.round(r.width*dpr));cv.height=Math.max(1,Math.round(r.height*dpr));if(r.width<720){X0=380;XW=800;}else{X0=0;XW=VW;}sc=cv.width/XW;VHc=cv.height/sc;offY=VHc*.55-HZ;placeLabel();}
     function P(y){return y+offY;}
@@ -1113,7 +1114,7 @@ var CMS_CONFIG={apiKey:'AIzaSyBR5SD9qxD5Ga9HcsdGmbITMhJ_rYex3go',authDomain:'sta
       ctx.globalAlpha=1;ctx.globalCompositeOperation='lighter';bridge(t);
       for(var i=0;i<count();i++){
         var sl=SLOTS[i],k=(started&&born[i])?Math.max(0,Math.min(1,(now-born[i])/700)):0;if(k<=0)continue;
-        var e=1-Math.pow(1-k,3),col=colorOf(BIZ[i],i),flick=.9+.1*Math.sin(t*1.7+i*1.3),hv=i===hover?1.9:1,R=32*e*hv*flick;
+        var e=1-Math.pow(1-k,3),col=colorOf(i),flick=.9+.1*Math.sin(t*1.7+i*1.3),hv=1,R=27*e*hv*flick;
         ctx.globalAlpha=.75*e;ctx.drawImage(sprite(col),sl.x-R,P(sl.y)-R,R*2,R*2);
         ctx.globalAlpha=e;ctx.fillStyle=col;ctx.fillRect(sl.x-2.1,P(sl.y)-2.8,4.2,5.6);
         if(sl.r<=1)reflect(sl.x,col,e,t,i,60+rnd(i+300)*70);
@@ -1130,15 +1131,13 @@ var CMS_CONFIG={apiKey:'AIzaSyBR5SD9qxD5Ga9HcsdGmbITMhJ_rYex3go',authDomain:'sta
       else ntip.classList.remove('on');
       return best;
     }
-    cv.addEventListener('mousemove',pick);
-    cv.addEventListener('mouseleave',function(){hover=-1;ntip.classList.remove('on');});
-    cv.addEventListener('click',function(ev){var i=pick(ev);if(i>=0){ntip.classList.remove('on');openMw(BIZ[i],cv);}});
-    function start(){if(started)return;started=true;stamp(140);}
+    /* 불빛은 그림으로만 보여 줌 (업체명 표시·클릭 없음) */
+    function start(){if(started)return;started=true;stamp(60);}
     if('IntersectionObserver' in window){
       new IntersectionObserver(function(es){es.forEach(function(e){visible=e.isIntersecting;if(visible){if(e.intersectionRatio>.3)start();run();}});},{threshold:[0,.3,.6]}).observe(stage);
     }else{visible=true;start();run();}
     setTimeout(function(){if(visible)start();},2500);
-    window.__niteRefresh=function(){if(started)stamp(90);placeLabel();};
+    window.__niteRefresh=function(){placeLabel();};
     window.__nitePlace=placeLabel;
     window.addEventListener('resize',size);size();
   })();
