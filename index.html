@@ -2,7 +2,6 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="robots" content="noindex,nofollow">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="description" content="여수의 숙박·음식점·카페 광고, 스테이 유 토탈 솔루션.">
 <meta property="og:title" content="스테이 유 토탈 솔루션 | 진짜광고">
@@ -417,6 +416,24 @@ body{letter-spacing:-.015em}
   .mw__body{padding:22px 18px 28px}.dt__top{grid-template-columns:1fr;gap:20px}.dt__work,.dt__pics,.dt__vids{grid-template-columns:1fr}.vid--tall{width:68%;justify-self:center}.dt__pics .ph{aspect-ratio:16/9}
   .mw__list{grid-template-columns:1fr 1fr;gap:20px 14px}.mw__list .bz__name{font-size:16.5px}.mw__list .bz__go{display:none}}
 
+/* v22: 첫 화면 업종 메뉴 */
+.bizcat{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px}
+.bizcat__b{flex:0 0 auto;white-space:nowrap;min-height:44px;padding:0 22px;border-radius:999px;border:1.5px solid var(--line);background:var(--white);color:var(--ink-2);font:inherit;font-size:16px;font-weight:600;cursor:pointer;transition:background .2s,color .2s,border-color .2s}
+.bizcat__b:hover{border-color:var(--ink);color:var(--ink)}
+.bizcat__b[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--white)}
+.bizcat__b:focus-visible{outline:2px solid var(--camellia);outline-offset:2px}
+#bizGrid,.biz-empty{transition:opacity .17s ease}
+#bizGrid.is-swap,.biz-empty.is-swap{opacity:0}
+.biz-empty{display:grid;place-items:center;align-content:center;gap:8px;text-align:center;min-height:300px;padding:40px 20px;border:1.5px dashed var(--line);border-radius:14px;color:var(--ink-2)}
+.biz-empty b{font-size:26px;font-weight:800;color:var(--ink)}
+@media(max-width:720px){
+  .bizcat{flex-wrap:nowrap;overflow-x:auto;margin-inline:-20px;padding:2px 20px 4px;margin-bottom:24px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .bizcat::-webkit-scrollbar{display:none}
+  .bizcat__b{min-height:40px;padding:0 18px;font-size:15.5px}
+  #bizGrid.is-filtered .bz:nth-child(n+5){display:grid}
+  .biz-empty{min-height:220px}
+}
+
 /* v16: 휴대폰에서는 업체 사진 외의 사진 자리를 숨김 */
 @media(max-width:720px){.hero__pic,.proc__side .ph{display:none}.hero{padding-block:36px 56px}}
 
@@ -487,7 +504,9 @@ body{letter-spacing:-.015em}
     <div class="nite__tip" aria-hidden="true"></div>
   </div>
   <div class="wrap">
+    <div class="bizcat" id="bizCat" role="tablist" aria-label="업종별 보기"></div>
     <div class="biz" id="bizGrid"></div>
+    <div class="biz-empty" id="bizEmpty" hidden></div>
     <div class="m-more"><button class="btn btn--line" type="button" id="bizMore">업체 전체 보기</button></div>
   </div>
 </section>
@@ -863,7 +882,7 @@ var CMS_CONFIG={apiKey:'AIzaSyBR5SD9qxD5Ga9HcsdGmbITMhJ_rYex3go',authDomain:'sta
     {id:'nangman',name:'스테이 낭만애견 풀빌라',cat:'pension',kind:'펜션',url:''},
     {id:'port240',name:'포트240',cat:'pension',kind:'풀빌라',url:''}
   ];
-  var CATLIST=[{id:'pension',name:'펜션'},{id:'resort',name:'리조트'},{id:'hotel',name:'호텔'},{id:'motel',name:'모텔'},{id:'cafe',name:'카페'},{id:'food',name:'식당'}];
+  var CATLIST=[{id:'food',name:'식당'},{id:'cafe',name:'카페'},{id:'pension',name:'펜션'},{id:'hotel',name:'호텔'},{id:'resort',name:'리조트'},{id:'motel',name:'모텔'}];
   var CATS={};
   function syncCats(){CATS={};CATLIST.forEach(function(c){CATS[c.id]=c.name;});}
   syncCats();
@@ -894,10 +913,42 @@ var CMS_CONFIG={apiKey:'AIzaSyBR5SD9qxD5Ga9HcsdGmbITMhJ_rYex3go',authDomain:'sta
     if(on&&mwMenu.scrollWidth>mwMenu.clientWidth)mwMenu.scrollLeft=Math.max(0,on.offsetLeft-mwMenu.offsetLeft-(mwMenu.clientWidth-on.offsetWidth)/2);}
   function renderTabs(){
     mwMenu.textContent='';mwTabs=[];
-    CATLIST.filter(function(c){return BIZ.some(function(b){return b.cat===c.id;});}).forEach(function(c){
+    CATLIST.forEach(function(c){
       var t=el('button','mw__tab',c.name);t.type='button';t.setAttribute('role','tab');t.setAttribute('data-cat',c.id);
       t.addEventListener('click',function(){show(c.id,null);});mwMenu.appendChild(t);mwTabs.push(t);
     });
+    renderCatBar();
+  }
+  /* ===== 첫 화면 업종 메뉴: 누르면 그 업종만 보임 ===== */
+  var curCat='all',catBar=document.getElementById('bizCat'),bizEmpty=document.getElementById('bizEmpty'),gridTimer=null;
+  function renderCatBar(){
+    if(!catBar)return;
+    if(curCat!=='all'&&!CATS[curCat])curCat='all';
+    catBar.textContent='';
+    [{id:'all',name:'전체'}].concat(CATLIST).forEach(function(c){
+      var t=el('button','bizcat__b',c.name);t.type='button';t.setAttribute('role','tab');t.setAttribute('data-cat',c.id);
+      t.setAttribute('aria-selected',c.id===curCat?'true':'false');
+      t.addEventListener('click',function(){
+        if(curCat===c.id)return;curCat=c.id;
+        [].forEach.call(catBar.children,function(x){x.setAttribute('aria-selected',x.getAttribute('data-cat')===curCat?'true':'false');});
+        swapGrid();
+      });
+      catBar.appendChild(t);
+    });
+  }
+  function fillGrid(){
+    if(!grid)return;
+    var items=curCat==='all'?BIZ:BIZ.filter(function(b){return b.cat===curCat;});
+    grid.textContent='';items.forEach(function(b){grid.appendChild(card(b,openMw));});
+    grid.classList.toggle('is-filtered',curCat!=='all');
+    var empty=!items.length;grid.hidden=empty;
+    if(bizEmpty){bizEmpty.textContent='';bizEmpty.hidden=!empty;
+      if(empty){bizEmpty.appendChild(el('b',null,'준비 중입니다'));bizEmpty.appendChild(el('p',null,(CATS[curCat]||'')+' 사례는 곧 올리겠습니다.'));}}
+    if(typeof updMore==='function')updMore();
+  }
+  function swapGrid(){
+    clearTimeout(gridTimer);grid.classList.add('is-swap');if(bizEmpty)bizEmpty.classList.add('is-swap');
+    gridTimer=setTimeout(function(){fillGrid();grid.classList.remove('is-swap');if(bizEmpty)bizEmpty.classList.remove('is-swap');},170);
   }
   function listView(cat){
     var f=document.createDocumentFragment(),items=BIZ.filter(function(b){return b.cat===cat;});
@@ -957,24 +1008,23 @@ var CMS_CONFIG={apiKey:'AIzaSyBR5SD9qxD5Ga9HcsdGmbITMhJ_rYex3go',authDomain:'sta
   }
   var grid=document.getElementById('bizGrid');
   if(grid&&mw){
-    BIZ.forEach(function(b){grid.appendChild(card(b,openMw));});
     renderTabs();
+    fillGrid();
     document.getElementById('mwClose').addEventListener('click',closeMw);
     mw.addEventListener('click',function(e){if(e.target===mw)closeMw();});
     document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMw();});
   }
   var bizCount=document.getElementById('bizCount');
   function renderBiz(){
-    if(grid){grid.textContent='';BIZ.forEach(function(b){grid.appendChild(card(b,openMw));});}
-    if(bizCount)bizCount.textContent=BIZ.length+'곳';
-    if(typeof updMore==='function')updMore();
     if(mwMenu)renderTabs();
+    fillGrid();
+    if(bizCount)bizCount.textContent=BIZ.length+'곳';
     if(window.__niteRefresh)window.__niteRefresh();
   }
   if(bizCount)bizCount.textContent=BIZ.length+'곳';
   /* ===== 휴대폰: 업체 전체 보기 · 인사말 펼치기 ===== */
   var bizMore=document.getElementById('bizMore');
-  function updMore(){if(!bizMore)return;bizMore.textContent='업체 전체 보기 ('+BIZ.length+'곳)';bizMore.parentNode.hidden=BIZ.length<=4;}
+  function updMore(){if(!bizMore)return;bizMore.textContent='업체 전체 보기 ('+BIZ.length+'곳)';bizMore.parentNode.hidden=BIZ.length<=4||curCat!=='all';}
   if(bizMore){updMore();bizMore.addEventListener('click',function(){
     var first=CATLIST.filter(function(c){return BIZ.some(function(b){return b.cat===c.id;});})[0];if(!first)return;
     clearTimeout(mwTimer);mwReturn=bizMore;paint(first.id,null);mw.hidden=false;document.body.style.overflow='hidden';void mw.offsetWidth;markTab(first.id);mw.classList.add('is-open');document.getElementById('mwClose').focus();
@@ -1013,7 +1063,7 @@ var CMS_CONFIG={apiKey:'AIzaSyBR5SD9qxD5Ga9HcsdGmbITMhJ_rYex3go',authDomain:'sta
   }
   function applyContent(c){
     if(c.texts){[].forEach.call(document.querySelectorAll('[data-k]'),function(n){var t=c.texts[n.getAttribute('data-k')];if(typeof t==='string'&&t.trim())setRich(n,t);});}
-    if(Array.isArray(c.cats)){var cl=c.cats.filter(function(x){return x&&x.id&&x.name;}).map(function(x){return {id:String(x.id),name:String(x.name)};});if(cl.length){CATLIST=cl;syncCats();BIZ.forEach(function(b){b.cat=fixCat(b);});renderTabs();}}
+    if(Array.isArray(c.cats)){var cl=c.cats.filter(function(x){return x&&x.id&&x.name;}).map(function(x){return {id:String(x.id),name:String(x.name)};});if(cl.length){CATLIST=cl;syncCats();BIZ.forEach(function(b){b.cat=fixCat(b);});renderTabs();fillGrid();}}
     if(Array.isArray(c.biz)&&c.biz.length){
       var list=c.biz.filter(function(b){return b&&b.id&&b.name;}).map(function(b){return {id:String(b.id),name:String(b.name),cat:String(b.cat||''),kind:String(b.kind||''),url:/^https?:\/\//.test(b.url||'')?b.url:'',intro:b.intro||'',work:Array.isArray(b.work)?b.work:[],videos:Array.isArray(b.videos)?b.videos.map(String):[]};});
       list.forEach(function(b){b.cat=fixCat(b);});
@@ -1034,7 +1084,7 @@ var CMS_CONFIG={apiKey:'AIzaSyBR5SD9qxD5Ga9HcsdGmbITMhJ_rYex3go',authDomain:'sta
           if(k==='hero'||k==='process'){var im=document.querySelector(k==='hero'?'.hero__pic img':'.proc__side img');if(im)im.src=ph[k];}
           else{PHOTO[k.slice(4)]=ph[k];changed=true;}
         }
-        if(changed&&grid){grid.textContent='';BIZ.forEach(function(b){grid.appendChild(card(b,openMw));});}
+        if(changed&&grid)fillGrid();
       })
       .catch(function(){/* 연결 실패 시 기본 내용 유지 */});
   }

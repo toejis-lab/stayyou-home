@@ -171,8 +171,8 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ink);outline-off
         <button class="btn btn--go btn--sm" id="addBiz" type="button">+ 업체 추가</button>
       </div>
       <details class="card" id="catCard" style="margin-bottom:16px">
-        <summary style="cursor:pointer;font-weight:800;font-size:16.5px">업종 목록 <span class="hint" style="font-weight:500">— 업체 창의 위쪽 메뉴입니다. 눌러서 펼치기</span></summary>
-        <p class="note" style="margin:10px 0 0">≡ 손잡이를 끌어서 메뉴 순서를 바꿀 수 있습니다. 업체가 없는 업종은 홈페이지 메뉴에 나오지 않습니다. 업체가 들어 있는 업종은 삭제할 수 없습니다.</p>
+        <summary style="cursor:pointer;font-weight:800;font-size:16.5px">업종 목록 <span class="hint" style="font-weight:500">— 첫 화면 업종 메뉴와 업체 창 메뉴입니다. 눌러서 펼치기</span></summary>
+        <p class="note" style="margin:10px 0 0">≡ 손잡이를 끌어서 메뉴 순서를 바꿀 수 있습니다. 이 순서대로 홈페이지 첫 화면 업종 메뉴와 업체 창 메뉴에 나옵니다. 업체가 없는 업종은 누르면 “준비 중”으로 보입니다. 업체가 들어 있는 업종은 삭제할 수 없습니다.</p>
         <div class="cats" id="cats"></div>
         <div class="catadd"><input type="text" id="catNew" placeholder="새 업종 이름 (예: 글램핑)" maxlength="20"><button class="btn btn--sm" id="catAdd" type="button">업종 추가</button></div>
       </details>
@@ -212,7 +212,7 @@ const el=(t,c,txt)=>{const n=document.createElement(t);if(c)n.className=c;if(txt
 const DEF_TEXTS=JSON.parse($('#defTexts').textContent);
 const DEF_BIZ=JSON.parse($('#defBiz').textContent);
 const DEF_PHOTOS=JSON.parse($('#defPhotos').textContent);
-const DEF_CATS=[{id:'pension',name:'펜션'},{id:'resort',name:'리조트'},{id:'hotel',name:'호텔'},{id:'motel',name:'모텔'},{id:'cafe',name:'카페'},{id:'food',name:'식당'}];
+const DEF_CATS=[{id:'food',name:'식당'},{id:'cafe',name:'카페'},{id:'pension',name:'펜션'},{id:'hotel',name:'호텔'},{id:'resort',name:'리조트'},{id:'motel',name:'모텔'}];
 let cats=DEF_CATS.map(c=>({...c}));
 const catName=id=>(cats.find(c=>c.id===id)||{}).name||'(업종 없음)';
 const WORKS=['클립 영상','검색 최적화','실제 방문 리뷰'];
