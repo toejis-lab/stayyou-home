@@ -476,7 +476,7 @@ body{letter-spacing:-.015em}
 .nite__tip{position:absolute;pointer-events:none;transform:translate(-50%,-140%);padding:6px 14px;border-radius:999px;background:rgba(255,255,255,.95);color:var(--ink);font-size:14px;font-weight:600;white-space:nowrap;opacity:0;transition:opacity .15s}
 .nite__tip.on{opacity:1}
 @media(max-width:720px){.nite{aspect-ratio:1200/1250;margin-bottom:48px}.nite__head{bottom:5%;gap:8px}.nite__head .lead{font-size:15px}}
-.intro-video{position:relative;margin-top:36px;border-radius:6px;overflow:hidden;background:var(--sea);aspect-ratio:16/9;box-shadow:0 18px 40px -22px rgba(14,14,14,.45)}
+.intro-video{position:relative;margin-top:36px;width:min(100%,300px);border-radius:10px;overflow:hidden;background:var(--sea);aspect-ratio:9/16;box-shadow:0 18px 40px -22px rgba(14,14,14,.45)}
 .intro-video video{display:block;width:100%;height:100%;object-fit:cover}
 .intro-video__play{position:absolute;inset:0;display:grid;place-items:end start;padding:20px;border:0;background:transparent;cursor:pointer}
 .intro-video__play span{display:grid;place-items:center;width:64px;height:64px;border-radius:50%;background:var(--camellia);box-shadow:0 10px 26px -8px rgba(255,90,79,.7);transition:transform .25s ease,background .25s ease}
@@ -485,7 +485,21 @@ body{letter-spacing:-.015em}
 .intro-video__play:focus-visible{outline:3px solid var(--camellia);outline-offset:-3px}
 .intro-video.is-playing .intro-video__play{display:none}
 .intro-video__cap{margin-top:12px;font-size:14px;color:var(--ink-2);letter-spacing:.02em}
-@media(max-width:720px){.intro-video{margin-top:24px}.intro-video__play{padding:14px}.intro-video__play span{width:54px;height:54px}.intro-video__play svg{width:22px;height:22px}}
+.intro-video__big{position:absolute;top:12px;right:12px;z-index:2;display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 13px;border:0;border-radius:999px;background:rgba(14,14,14,.62);color:#fff;font-size:13px;font-weight:600;cursor:pointer;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);transition:background .2s}
+.intro-video__big svg{width:15px;height:15px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.intro-video__big:hover,.intro-video__big:focus-visible{background:rgba(14,14,14,.85)}
+.intro-video__big:focus-visible{outline:3px solid var(--camellia);outline-offset:2px}
+.vbox{position:fixed;inset:0;z-index:200;display:grid;place-items:center;padding:56px 16px 24px;background:rgba(8,8,8,.92);opacity:0;visibility:hidden;transition:opacity .3s ease,visibility 0s linear .3s}
+.vbox.is-open{opacity:1;visibility:visible;transition:opacity .3s ease}
+.vbox video{display:block;height:min(calc(100vh - 80px),calc((100vw - 32px) * 16 / 9));height:min(calc(100dvh - 80px),calc((100vw - 32px) * 16 / 9));aspect-ratio:9/16;width:auto;max-width:100%;border-radius:10px;background:#000;transform:scale(.96);transition:transform .3s ease}
+.vbox.is-open video{transform:none}
+.vbox__x{position:absolute;top:12px;right:12px;display:grid;place-items:center;width:44px;height:44px;border:0;border-radius:50%;background:rgba(255,255,255,.14);cursor:pointer;transition:background .2s}
+.vbox__x:hover,.vbox__x:focus-visible{background:rgba(255,255,255,.26)}
+.vbox__x svg{width:20px;height:20px;stroke:#fff;stroke-width:2.2;stroke-linecap:round}
+html.vbox-lock{overflow:hidden}
+@media(min-width:901px) and (max-height:880px){.letter__side{position:static}}
+@media(max-width:720px){.intro-video{margin-top:24px;width:min(100%,340px)}.intro-video__play{padding:14px}.intro-video__play span{width:54px;height:54px}.intro-video__play svg{width:22px;height:22px}}
+@media(prefers-reduced-motion:reduce){.vbox,.vbox video{transition:none}}
 </style>
 </head>
 <body>
@@ -561,10 +575,11 @@ body{letter-spacing:-.015em}
     <div class="letter">
       <div class="letter__side"><h2 class="d2 letter__h" data-k="about-L0">사장님이 지켜온 그 자리에,<br>사람들의 발걸음이 이어지도록.</h2>
         <figure class="intro-video" id="introVideo">
-          <video src="stayu-intro.mp4?v=2" poster="stayu-intro.jpg?v=2" width="1920" height="1080" preload="none" playsinline aria-label="스테이 유 회사 소개 영상 (15초)"></video>
+          <video src="stayu-intro.mp4?v=3" poster="stayu-intro.jpg?v=3" width="720" height="1280" preload="none" playsinline aria-label="스테이 유 회사 소개 영상"></video>
           <button class="intro-video__play" type="button" aria-label="회사 소개 영상 재생"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l14 8-14 8z"/></svg></span></button>
+          <button class="intro-video__big" type="button" aria-label="회사 소개 영상 크게 보기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>크게 보기</button>
         </figure>
-        <p class="intro-video__cap">15초로 보는 스테이 유</p></div>
+        <p class="intro-video__cap">영상으로 보는 스테이 유</p></div>
       <div class="letter__body">
         <p class="letter__p letter__greet" data-k="about-L1">안녕하세요.<br>스테이 유 토탈 솔루션입니다.</p>
         <p class="letter__p" data-k="about-L2">가게의 문을 연다는 것은<br>자신의 이름을 걸고, 매일 누군가를 기다리는 일이라고 생각합니다.</p>
@@ -1262,7 +1277,26 @@ var CMS_CONFIG={apiKey:'AIzaSyBR5SD9qxD5Ga9HcsdGmbITMhJ_rYex3go',authDomain:'sta
 <script>
 (function(){var f=document.getElementById('introVideo');if(!f)return;var v=f.querySelector('video'),b=f.querySelector('.intro-video__play');
 b.addEventListener('click',function(){f.classList.add('is-playing');v.controls=true;var p=v.play();if(p&&p.catch)p.catch(function(){});});
-v.addEventListener('ended',function(){f.classList.remove('is-playing');v.controls=false;v.load();});})();
+v.addEventListener('ended',function(){f.classList.remove('is-playing');v.controls=false;v.load();});
+/* 크게 보기: 화면 전체에 어둡게 깔고 같은 영상을 이어서 재생 */
+var big=f.querySelector('.intro-video__big');if(!big)return;
+var box=document.createElement('div');box.className='vbox';box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label','회사 소개 영상 크게 보기');
+box.innerHTML='<button class="vbox__x" type="button" aria-label="닫기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button>';
+var bv=document.createElement('video');bv.setAttribute('playsinline','');bv.controls=true;bv.preload='none';bv.poster=v.getAttribute('poster');bv.setAttribute('aria-label','스테이 유 회사 소개 영상');box.appendChild(bv);
+document.body.appendChild(box);var xb=box.querySelector('.vbox__x'),last=null;
+function open(){last=document.activeElement;var t=v.currentTime||0;v.pause();
+  if(!bv.getAttribute('src'))bv.src=v.getAttribute('src');
+  var go=function(){try{if(t>0&&t<bv.duration)bv.currentTime=t;}catch(e){}var p=bv.play();if(p&&p.catch)p.catch(function(){});};
+  if(bv.readyState>=1)go();else bv.addEventListener('loadedmetadata',go,{once:true});
+  box.classList.add('is-open');document.documentElement.classList.add('vbox-lock');xb.focus();}
+function close(){if(!box.classList.contains('is-open'))return;var t=bv.currentTime||0;bv.pause();box.classList.remove('is-open');document.documentElement.classList.remove('vbox-lock');
+  if(t>0&&!bv.ended){f.classList.add('is-playing');v.controls=true;var s=function(){try{v.currentTime=t;}catch(e){}};if(v.readyState>=1)s();else{v.addEventListener('loadedmetadata',s,{once:true});v.load();}}
+  if(last&&last.focus)last.focus();}
+big.addEventListener('click',open);xb.addEventListener('click',close);
+box.addEventListener('click',function(e){if(e.target===box)close();});
+bv.addEventListener('ended',close);
+document.addEventListener('keydown',function(e){if(box.classList.contains('is-open')&&(e.key==='Escape'||e.key==='Esc'))close();if(box.classList.contains('is-open')&&e.key==='Tab'){e.preventDefault();(document.activeElement===xb?bv:xb).focus();}});
+})();
 </script>
 </body>
 </html>
